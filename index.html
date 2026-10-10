@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>❤︎ 1-6 ❤︎</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #faf8f5;
+  --text: #39352f;
+  --sub: #918980;
+  --line: #e9e3dc;
+  --accent: #a88e7a;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Gowun Dodum', sans-serif;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+header {
+  text-align: center;
+  padding: 76px 20px 48px;
+}
+
+.heart {
+  color: #bd8e8e;
+  font-size: 19px;
+  letter-spacing: 8px;
+  margin-bottom: 18px;
+}
+
+h1 {
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: clamp(36px, 7vw, 58px);
+  font-weight: 400;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.subtitle {
+  color: var(--sub);
+  font-size: 13px;
+  letter-spacing: 1px;
+  margin-top: 20px;
+  line-height: 1.9;
+}
+
+.year-label {
+  display: inline-block;
+  margin-top: 27px;
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  padding: 8px 18px;
+  color: var(--sub);
+  font-size: 12px;
+}
+
+.divider {
+  width: 36px;
+  height: 1px;
+  background: #c9b7a7;
+  margin: 0 auto 45px;
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 22px 90px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+
+.section-title {
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: 23px;
+}
+
+.count {
+  color: var(--sub);
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+.filters {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.filter {
+  border: 1px solid var(--line);
+  color: var(--sub);
+  background: transparent;
+  padding: 8px 13px;
+  border-radius: 25px;
+  font-size: 12px;
+  transition: 0.2s;
+}
+
+.filter:hover,
+.filter.active {
+  background: var(--text);
+  color: white;
+  border-color: var(--text);
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px 19px;
+}
+
+.photo-card {
+  min-width: 0;
+  cursor: pointer;
+  animation: appear 0.4s ease both;
+}
+
+.photo-frame {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #eee9e2;
+  border-radius: 3px;
+  position: relative;
+}
+
+.photo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s;
+}
+
+.photo-card:hover img {
+  transform: scale(1.04);
+}
+
+.photo-info {
+  padding: 12px 2px 0;
+}
+
+.photo-date {
+  font-size: 11px;
+  color: var(--sub);
+  margin-bottom: 5px;
+}
+
+.photo-caption {
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.photo-category {
+  display: inline-block;
+  color: #9b8572;
+  background: #f0eae3;
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 3px;
+  margin-top: 8px;
+}
+
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--sub);
+  padding: 80px 10px;
+  line-height: 2;
+}
+
+footer {
+  text-align: center;
+  padding: 35px 20px 55px;
+  border-top: 1px solid var(--line);
+  color: var(--sub);
+  font-size: 12px;
+  line-height: 2;
+}
+
+footer .footer-heart {
+  color: #bd8e8e;
+  font-size: 17px;
+  margin-bottom: 8px;
+}
+
+/* 사진 크게 보기 */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 10;
+  inset: 0;
+  background: rgba(28, 25, 22, 0.92);
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  max-width: 850px;
+  width: 100%;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal img {
+  max-width: 100%;
+  max-height: 76vh;
+  object-fit: contain;
+}
+
+.modal-caption {
+  color: white;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.8;
+  margin-top: 15px;
+}
+
+.close {
+  position: fixed;
+  top: 18px;
+  right: 22px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 34px;
+  font-weight: 300;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 650px) {
+  header {
+    padding-top: 65px;
+  }
+
+  main {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 23px 12px;
+  }
+
+  .toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .filters {
+    gap: 6px;
+  }
+
+  .filter {
+    padding: 7px 11px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="heart">♡ &nbsp; ♡ &nbsp; ♡</div>
+  <h1>❤︎ 1-6 ❤︎</h1>
+
+  <p class="subtitle">
+    우리의 열일곱, 함께했던 모든 순간<br>
+    오래도록 기억하고 싶은 1년
+  </p>
+
+  <div class="year-label">2026. 03 — 2027. 02</div>
+</header>
+
+<div class="divider"></div>
+
+<main>
+  <div class="toolbar">
+    <div>
+      <span class="section-title">Our Memories</span>
+      <span class="count" id="count"></span>
+    </div>
+
+    <div class="filters" id="filters"></div>
+  </div>
+
+  <div class="gallery" id="gallery"></div>
+</main>
+
+<footer>
+  <div class="footer-heart">♡</div>
+  1학년 6반의 소중한 기록<br>
+  We were here, together.
+</footer>
+
+<div class="modal" id="modal" onclick="closeModal(event)">
+  <button class="close" onclick="hideModal()" aria-label="닫기">×</button>
+  <div class="modal-content">
+    <img id="modalImage" src="" alt="확대된 추억 사진">
+    <div class="modal-caption" id="modalCaption"></div>
+  </div>
+</div>
+
+<script>
+/*
+  사진 추가 방법
+  1. photos 폴더에 사진을 넣기
+  2. 아래 목록에 사진 정보를 추가하기
+  3. src에는 photos/사진파일명.jpg 입력하기
+
+  month는 3월부터 12월까지 3~12,
+  다음 해 1월과 2월은 13, 14로 입력하기
+*/
+
+const photos = [
+  {
+    src: "photos/01.jpg",
+    month: 3,
+    date: "2026.03",
+    caption: "우리의 첫 만남",
+    category: "학교생활"
+  },
+  {
+    src: "photos/02.jpg",
+    month: 3,
+    date: "2026.03",
+    caption: "처음으로 함께한 순간",
+    category: "단체사진"
+  },
+  {
+    src: "photos/03.jpg",
+    month: 4,
+    date: "2026.04",
+    caption: "평범해서 더 소중했던 날",
+    category: "학교생활"
+  },
+  {
+    src: "photos/04.jpg",
+    month: 5,
+    date: "2026.05",
+    caption: "우리 반의 하루",
+    category: "단체사진"
+  },
+  {
+    src: "photos/05.jpg",
+    month: 6,
+    date: "2026.06",
+    caption: "함께 웃었던 날",
+    category: "학교생활"
+  },
+  {
+    src: "photos/06.jpg",
+    month: 7,
+    date: "2026.07",
+    caption: "잊고 싶지 않은 순간",
+    category: "학교생활"
+  }
+];
+
+const monthNames = {
+  3: "3월", 4: "4월", 5: "5월",
+  6: "6월", 7: "7월", 8: "8월",
+  9: "9월", 10: "10월", 11: "11월",
+  12: "12월", 13: "2027년 1월", 14: "2027년 2월"
+};
+
+let currentFilter = "전체";
+
+const filters = document.getElementById("filters");
+const gallery = document.getElementById("gallery");
+const count = document.getElementById("count");
+
+function makeFilters() {
+  const options = [
+    "전체",
+    "단체사진",
+    "학교생활",
+    ...Object.values(monthNames)
+  ];
+
+  filters.innerHTML = "";
+
+  options.forEach(option => {
+    const button = document.createElement("button");
+    button.className =
+      "filter" + (option === currentFilter ? " active" : "");
+    button.textContent = option;
+
+    button.onclick = () => {
+      currentFilter = option;
+      makeFilters();
+      renderPhotos();
+    };
+
+    filters.appendChild(button);
+  });
+}
+
+function renderPhotos() {
+  gallery.innerHTML = "";
+
+  const filtered = photos.filter(photo => {
+    if (currentFilter === "전체") return true;
+    if (currentFilter === photo.category) return true;
+    return monthNames[photo.month] === currentFilter;
+  });
+
+  count.textContent = `(${filtered.length})`;
+
+  if (filtered.length === 0) {
+    gallery.innerHTML = `
+      <div class="empty">
+        아직 등록된 사진이 없어<br>
+        이 달의 추억을 추가해 줘 ♡
+      </div>
+    `;
+    return;
+  }
+
+  filtered.forEach(photo => {
+    const card = document.createElement("div");
+    card.className = "photo-card";
+
+    const frame = document.createElement("div");
+    frame.className = "photo-frame";
+
+    const img = document.createElement("img");
+    img.src = photo.src;
+    img.alt = photo.caption;
+    img.loading = "lazy";
+
+    img.onerror = () => {
+      img.style.display = "none";
+      frame.style.background = "#eee9e2";
+      frame.innerHTML = `
+        <div style="
+          height:100%;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          color:#a69a8d;
+          font-size:12px;
+          text-align:center;
+          padding:12px;
+          line-height:2;">
+          사진을 추가해 줘 ♡<br>
+          ${photo.src}
+        </div>
+      `;
+    };
+
+    frame.appendChild(img);
+
+    const info = document.createElement("div");
+    info.className = "photo-info";
+
+    const date = document.createElement("div");
+    date.className = "photo-date";
+    date.textContent = photo.date;
+
+    const caption = document.createElement("div");
+    caption.className = "photo-caption";
+    caption.textContent = photo.caption;
+
+    const category = document.createElement("span");
+    category.className = "photo-category";
+    category.textContent = photo.category;
+
+    info.append(date, caption, category);
+    card.append(frame, info);
+
+    card.onclick = () => showModal(photo);
+
+    gallery.appendChild(card);
+  });
+}
+
+function showModal(photo) {
+  document.getElementById("modalImage").src = photo.src;
+  document.getElementById("modalCaption").textContent =
+    `${photo.date} · ${photo.caption}`;
+
+  document.getElementById("modal").classList.add("show");
+  document.body.style.overflow = "hidden";
+}
+
+function hideModal() {
+  document.getElementById("modal").classList.remove("show");
+  document.body.style.overflow = "";
+}
+
+function closeModal(event) {
+  if (event.target.id === "modal") hideModal();
+}
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") hideModal();
+});
+
+makeFilters();
+renderPhotos();
+</script>
+
+</body>
+</html>
