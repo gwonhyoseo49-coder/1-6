@@ -650,13 +650,29 @@ function renderPhotos() {
 }
 
 function showModal(photo) {
-  document.getElementById("modalImage").src = photo.src;
-  document.getElementById("modalCaption").textContent =
-    `${photo.date} · ${photo.caption}`;
+  const modalImage = document.getElementById("modalImage");
+  const modalCaption = document.getElementById("modalCaption");
+  const modal = document.getElementById("modal");
 
-  document.getElementById("modal").classList.add("show");
+  modalImage.style.display = "";
+  modalImage.src = photo.src;
+  modalCaption.textContent = `${photo.date} · ${photo.caption}`;
+
+  const memoText = document.getElementById("modalMemoText");
+  if (memoText) memoText.style.display = "none";
+
+  modal.classList.add("show");
   document.body.style.overflow = "hidden";
 }
+
+function hideModal() {
+  document.getElementById("modal").classList.remove("show");
+  document.body.style.overflow = "";
+
+  const memoText = document.getElementById("modalMemoText");
+  if (memoText) memoText.style.display = "none";
+}
+
 
 function hideModal() {
   document.getElementById("modal").classList.remove("show");
